@@ -11,7 +11,7 @@ RUN useradd -m -G wheel ${USER} && \
 
 
 RUN pacman -Syu --noconfirm git wget tmux npm tzdata base-devel cmake zsh sudo ninja gtest make \
-    gettext libtool automake unzip curl boost python sqlite ncurses openssl readline
+    gettext libtool automake unzip curl boost python sqlite ncurses openssl readline clang gcc pkgconfig
 RUN pacman -Sy --noconfirm iproute2 openssh
 
 
@@ -27,10 +27,13 @@ RUN git clone https://github.com/pyenv/pyenv.git ${USERHOME}/.pyenv && cd ${USER
 RUN ${USERHOME}/.pyenv/bin/pyenv virtualenv 3.10.10 neovim-3
     # && ${USERHOME}/.pyenv/versions/neovim-3/bin/python3 -m pip install pynvim
 
-# ## Neovim
-# RUN git clone https://github.com/neovim/neovim.git ${USERHOME}/.local/tools/neovim \
-#     && cd ${USERHOME}/.local/tools/neovim \
-#     && make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=${USERHOME}/.local install
+
+# Others
+
+Run pacman -Sy --noconfirm fd lsd fzf
+Run pacman -Sy --noconfirm rustup gcc
+Run rustup default nightly
+Run cargo install ripgrep
 
 USER ${USER}
 RUN git clone https://github.com/gen740/config.nvim.git ${USERHOME}/.config/nvim
