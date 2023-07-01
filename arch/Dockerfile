@@ -22,9 +22,9 @@ RUN pacman -Sy --noconfirm base-devel openssl zlib xz tk
 RUN git clone https://github.com/pyenv/pyenv.git ${USERHOME}/.pyenv && cd ${USERHOME}/.pyenv && src/configure && make -C src \
     && git clone https://github.com/pyenv/pyenv-virtualenv.git ${USERHOME}/.pyenv/plugins/pyenv-virtualenv \
     &&  git clone https://github.com/pyenv/pyenv-update.git ${USERHOME}/.pyenv/plugins/pyenv-update \
-    && ${USERHOME}/.pyenv/bin/pyenv install 3.10.10 3.11.2
+    && ${USERHOME}/.pyenv/bin/pyenv install 3.10.12 3.11.4
 
-RUN ${USERHOME}/.pyenv/bin/pyenv virtualenv 3.10.10 neovim-3
+RUN ${USERHOME}/.pyenv/bin/pyenv virtualenv 3.10.12 neovim-3
     # && ${USERHOME}/.pyenv/versions/neovim-3/bin/python3 -m pip install pynvim
 
 

@@ -1,4 +1,6 @@
-docker run --cap-add=SYS_PTRACE --security-opt="seccomp=unconfined" --net="host" --name Main -p 8888:8888 -it main /bin/zsh
+docker run --cap-add=SYS_PTRACE --cap-add=SYS_ADMIN --security-opt="seccomp=unconfined" --net="host" --name Main -p 8888:8888 -it main /bin/zsh
+docker run --cap-add=SYS_PTRACE --cap-add=SYS_ADMIN --security-opt="seccomp=unconfined" --net="host" --name Main -it main /bin/zsh
+
 
 docker run --cap-add=SYS_PTRACE --security-opt="seccomp=unconfined" --name Gazebo3 -p 11345:11345 -it main /bin/zsh
 docker run --cap-add=SYS_PTRACE --security-opt="seccomp=unconfined" --name Gazebo -it main /bin/zsh
