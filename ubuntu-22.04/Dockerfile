@@ -3,16 +3,18 @@ LABEL version="ubuntu"
 
 ENV USER gen740
 ENV USERHOME /home/${USER}
-# ENV HOME ${USERHOME}
 ENV TZ=Asia/Tokyo
+
 
 RUN useradd -m --groups sudo ${USER} && \
     gpasswd -a ${USER} sudo && \
     echo "${USER}:${USER}" | chpasswd && \
     echo "ALL ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-RUN apt-get -y update && apt-get -y upgrade
 
+
+
+RUN apt-get -y update && apt-get -y upgrade
 
 # Install Dependencies #########################################################
 RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone
@@ -37,9 +39,12 @@ RUN apt-get -y install build-essential libssl-dev zlib1g-dev \
 
 # Install config files #########################################################
 USER ${USER}
+
+COPY lin_flm_v11.17.2.0 ${USERHOME}/lin_xilinx
 RUN git clone https://github.com/gen740/config.nvim.git ${USERHOME}/.config/nvim
 RUN git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles \
     && ${USERHOME}/.dotfiles/setup.zsh
+
 
 # Install Cargo and Rust tools #################################################
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
@@ -55,34 +60,12 @@ RUN mkdir -p ${USERHOME}/.local/tools \
 RUN export PATH=$PATH:/usr/local/go/bin && cd ${USERHOME}/.local && curl https://raw.githubusercontent.com/junegunn/fzf/master/install | zsh
 
 # install pyenv and setup python ##################################################
-RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv && cd ~/.pyenv && src/configure && make -C src \
-    && git clone https://github.com/pyenv/pyenv-virtualenv.git ${USERHOME}/.pyenv/plugins/pyenv-virtualenv \
-    &&  git clone https://github.com/pyenv/pyenv-update.git ${USERHOME}/.pyenv/plugins/pyenv-update \
-    && ${USERHOME}/.pyenv/bin/pyenv install 3.10.10 3.11.2
-
-RUN ${USERHOME}/.pyenv/bin/pyenv virtualenv 3.10.10 neovim-3 \
-    && ${USERHOME}/.pyenv/versions/neovim-3/bin/python3 -m pip install pynvim
-
-# Install grpc #################################################################
-RUN git clone --recurse-submodule https://github.com/grpc/grpc.git ${USERHOME}/.local/tools/grpc \
-    && cd ${USERHOME}/.local/tools/grpc \
-    && mkdir cmake/build && cd cmake/build \
-    && cmake -DgRPC_INSTALL=ON \
-    -DgRPC_BUILD_TESTS=OFF \
-    -DCMAKE_INSTALL_PREFIX=/opt/gRPC \
-    -GNinja \
-    ../.. \
-    && ninja && echo ${USER} | sudo -S ninja install
+RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv && cd ~/.pyenv && src/configure && make -C src
 
 # Install neovim ###############################################################
 RUN git clone https://github.com/neovim/neovim.git ${USERHOME}/.local/tools/neovim \
     && cd ${USERHOME}/.local/tools/neovim \
     && make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=${USERHOME}/.local install
-
-# Install OpenBLAS #############################################################
-# RUN git clone https://github.com/xianyi/OpenBLAS.git ${USERHOME}/.local/tools/OpenBLAS \
-#     && cd ${USERHOME}/.local/tools/OpenBLAS \
-#     && make && make install
 
 # Install linux-brew
 RUN echo ${USER} | sudo -S env "NONINTERACTIVE=1" /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -92,6 +75,4 @@ RUN echo ${USER} | sudo -S chown -R ${USER} /home/linuxbrew/.linuxbrew \
 ################################################################################
 
 RUN echo ${USER} | sudo -S chown -R ${USER}:${USER} ${USERHOME}
-# RUN chown -R ${USER}:${USER} /opt/OpenBLAS
-RUN echo ${USER} | sudo -S chown -R ${USER}:${USER} /opt/gRPC
 RUN echo ${USER} | sudo -S chsh -s /bin/zsh
