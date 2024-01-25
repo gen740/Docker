@@ -14,6 +14,13 @@ jobs:
     - name: Build the Docker image
       run: |
         cd arch
-        docker build .
+        docker build . -t test-arch
       env:
         DOCKER_BUILDKIT: 1
+
+    - name: Push to docker hub
+      env:
+        DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
+      run: |
+        echo "${DOCKER_HUB_TOKEN}" | docker login -u gen740 --password-stdin
+        docker push test-arch
