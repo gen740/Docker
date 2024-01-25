@@ -29,35 +29,35 @@ RUN tempfile=$(mktemp)                                                          
     && rm $tempfile
 
 # ## Build llvm
-# RUN git clone https://github.com/llvm/llvm-project.git ${USERHOME}/.local/tools/llvm-project        \
-#     && cd ${USERHOME}/.local/tools/llvm-project                                                     \
-#     && cmake -Bbuild -Sllvm -GNinja                                                                 \
-#     -DCMAKE_BUILD_TYPE=Release                                                                      \
-#     -DCMAKE_INSTALL_PREFIX=$HOME/.local                                                             \
-#     -DLLVM_BINUTILS_INCDIR=/usr/include                                                             \
-#     -DLLVM_APPEND_VC_REV=ON                                                                         \
-#     -DLLVM_VERSION_SUFFIX=""                                                                        \
-#     -DLLVM_ENABLE_RTTI=ON                                                                           \
-#     -DLLVM_ENABLE_FFI=ON                                                                            \
-#     -DLLVM_INCLUDE_DOCS=OFF                                                                         \
-#     -DLLVM_INCLUDE_TESTS=OFF                                                                        \
-#     -DFFI_INCLUDE_DIR:PATH="$(pkg-config --variable=includedir libffi)"                             \
-#     -DLLVM_BUILD_LLVM_DYLIB=ON                                                                      \
-#     -DLLVM_LINK_LLVM_DYLIB=ON                                                                       \
-#     -DLLVM_INSTALL_UTILS=ON                                                                         \
-#     -DLLVM_BUILD_DOCS=OFF                                                                           \
-#     -DLLVM_ENABLE_DOXYGEN=OFF                                                                       \
-#     -DLLVM_ENABLE_SPHINX=OFF                                                                        \
-#     -DSPHINX_OUTPUT_HTML:BOOL=OFF                                                                   \
-#     -DSPHINX_WARNINGS_AS_ERRORS=OFF                                                                 \
-#     -DPOLLY_ENABLE_GPGPU_CODEGEN=ON                                                                 \
-#     -DLLDB_USE_SYSTEM_SIX=1                                                                         \
-#     -DLLVM_ENABLE_PROJECTS="polly;lldb;lld;compiler-rt;clang-tools-extra;clang;mlir"                \
-#     -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind;openmp"                                      \
-#     -DLLVM_LIT_ARGS="-sv --ignore-fail"                                                             \
-#     -DLLVM_ENABLE_DUMP=ON                                                                           \
-#     -Wno-dev                                                                                        \
-#     && cmake --build build --target install
+RUN git clone https://github.com/llvm/llvm-project.git ${USERHOME}/.local/tools/llvm-project        \
+    && cd ${USERHOME}/.local/tools/llvm-project                                                     \
+    && cmake -Bbuild -Sllvm -GNinja                                                                 \
+    -DCMAKE_BUILD_TYPE=Release                                                                      \
+    -DCMAKE_INSTALL_PREFIX=$HOME/.local                                                             \
+    -DLLVM_BINUTILS_INCDIR=/usr/include                                                             \
+    -DLLVM_APPEND_VC_REV=ON                                                                         \
+    -DLLVM_VERSION_SUFFIX=""                                                                        \
+    -DLLVM_ENABLE_RTTI=ON                                                                           \
+    -DLLVM_ENABLE_FFI=ON                                                                            \
+    -DLLVM_INCLUDE_DOCS=OFF                                                                         \
+    -DLLVM_INCLUDE_TESTS=OFF                                                                        \
+    -DFFI_INCLUDE_DIR:PATH="$(pkg-config --variable=includedir libffi)"                             \
+    -DLLVM_BUILD_LLVM_DYLIB=ON                                                                      \
+    -DLLVM_LINK_LLVM_DYLIB=ON                                                                       \
+    -DLLVM_INSTALL_UTILS=ON                                                                         \
+    -DLLVM_BUILD_DOCS=OFF                                                                           \
+    -DLLVM_ENABLE_DOXYGEN=OFF                                                                       \
+    -DLLVM_ENABLE_SPHINX=OFF                                                                        \
+    -DSPHINX_OUTPUT_HTML:BOOL=OFF                                                                   \
+    -DSPHINX_WARNINGS_AS_ERRORS=OFF                                                                 \
+    -DPOLLY_ENABLE_GPGPU_CODEGEN=ON                                                                 \
+    -DLLDB_USE_SYSTEM_SIX=1                                                                         \
+    -DLLVM_ENABLE_PROJECTS="polly;lldb;lld;compiler-rt;clang-tools-extra;clang;mlir"                \
+    -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind;openmp"                                      \
+    -DLLVM_LIT_ARGS="-sv --ignore-fail"                                                             \
+    -DLLVM_ENABLE_DUMP=ON                                                                           \
+    -Wno-dev                                                                                        \
+    && cmake --build build --target install
 
 ## Pyenv
 RUN git clone https://github.com/pyenv/pyenv.git ${USERHOME}/.pyenv                                         \
@@ -70,9 +70,7 @@ RUN pacman -Syu --noconfirm fd lsd fzf ripgrep go
 
 USER ${USER}
 
-## yay
 RUN echo ${USER} | sudo -S chown -R ${USER}:${USER} ${USERHOME}/.local
-RUN git clone https://aur.archlinux.org/yay.git ${USERHOME}/.local/tools/yay && cd ${USERHOME}/.local/tools/yay && yes | makepkg -si
 RUN git clone https://github.com/gen740/config.nvim.git ${USERHOME}/.config/nvim
 RUN git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles \
     && ${USERHOME}/.dotfiles/setup.zsh
