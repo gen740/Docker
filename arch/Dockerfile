@@ -15,7 +15,7 @@ RUN pacman -Syu --noconfirm git wget tmux npm tzdata base-devel cmake zsh sudo n
 RUN pacman -Syu --noconfirm iproute2 openssh zlib xz tk
 
 ## set locale
-RUN sudo sed -i '/^#.*en_US.UTF-8/s/^#//' /etc/locale.gen
+RUN sed -i '/^#.*en_US.UTF-8/s/^#//' /etc/locale.gen
 
 ## Neovim
 RUN mkdir -p ${USERHOME}/.local/tools                                                          \
