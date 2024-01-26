@@ -15,10 +15,10 @@ RUN pacman -Syu --noconfirm git wget tmux npm tzdata base-devel cmake zsh sudo n
 RUN pacman -Syu --noconfirm iproute2 openssh zlib xz tk
 
 ## Neovim
-RUN mkdir -p ${USERHOME}/.local/tools                                               \
-    && git clone https://github.com/neovim/neovim ${USERHOME}/.local/tools/neovim   \
-    && cd ${USERHOME}/.local/tools/neovim                                           \
-    && make CMAKE_BUILD_TYPE=Release                                                \
+RUN mkdir -p ${USERHOME}/.local/tools                                                       \
+    && git clone https://github.com/neovim/neovim ${USERHOME}/.local/tools/neovim --depth 1 \
+    && cd ${USERHOME}/.local/tools/neovim                                                   \
+    && make CMAKE_BUILD_TYPE=Release                                                        \
     && make CMAKE_INSTALL_PREFIX=${USERHOME}/.local install
 RUN pacman -Syu --noconfirm lua-language-server stylua
 
@@ -28,35 +28,36 @@ RUN tempfile=$(mktemp)                                                          
     && tic -x -o ~/.terminfo $tempfile                                                                      \
     && rm $tempfile
 
-# ## Build llvm
-RUN git clone https://github.com/llvm/llvm-project.git ${USERHOME}/.local/tools/llvm-project        \
-    && cd ${USERHOME}/.local/tools/llvm-project                                                     \
-    && cmake -Bbuild -Sllvm -GNinja                                                                 \
-    -DCMAKE_BUILD_TYPE=Release                                                                      \
-    -DCMAKE_INSTALL_PREFIX=$HOME/.local                                                             \
-    -DLLVM_BINUTILS_INCDIR=/usr/include                                                             \
-    -DLLVM_APPEND_VC_REV=ON                                                                         \
-    -DLLVM_VERSION_SUFFIX=""                                                                        \
-    -DLLVM_ENABLE_RTTI=ON                                                                           \
-    -DLLVM_ENABLE_FFI=ON                                                                            \
-    -DLLVM_INCLUDE_DOCS=OFF                                                                         \
-    -DLLVM_INCLUDE_TESTS=OFF                                                                        \
-    -DFFI_INCLUDE_DIR:PATH="$(pkg-config --variable=includedir libffi)"                             \
-    -DLLVM_BUILD_LLVM_DYLIB=ON                                                                      \
-    -DLLVM_LINK_LLVM_DYLIB=ON                                                                       \
-    -DLLVM_INSTALL_UTILS=ON                                                                         \
-    -DLLVM_BUILD_DOCS=OFF                                                                           \
-    -DLLVM_ENABLE_DOXYGEN=OFF                                                                       \
-    -DLLVM_ENABLE_SPHINX=OFF                                                                        \
-    -DSPHINX_OUTPUT_HTML:BOOL=OFF                                                                   \
-    -DSPHINX_WARNINGS_AS_ERRORS=OFF                                                                 \
-    -DPOLLY_ENABLE_GPGPU_CODEGEN=ON                                                                 \
-    -DLLDB_USE_SYSTEM_SIX=1                                                                         \
-    -DLLVM_ENABLE_PROJECTS="polly;lldb;lld;compiler-rt;clang-tools-extra;clang;mlir"                \
-    -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind;openmp"                                      \
-    -DLLVM_LIT_ARGS="-sv --ignore-fail"                                                             \
-    -DLLVM_ENABLE_DUMP=ON                                                                           \
-    -Wno-dev                                                                                        \
+## Build llvm
+RUN git clone https://github.com/llvm/llvm-project.git ${USERHOME}/.local/tools/llvm-project --depth 1  \
+    && cd ${USERHOME}/.local/tools/llvm-project                                                         \
+    && cmake -Bbuild -Sllvm -GNinja                                                                     \
+    -DCMAKE_BUILD_TYPE=Release                                                                          \
+    -DCMAKE_INSTALL_PREFIX=$HOME/.local                                                                 \
+    -DLLVM_BINUTILS_INCDIR=/usr/include                                                                 \
+    -DLLVM_APPEND_VC_REV=ON                                                                             \
+    -DLLVM_VERSION_SUFFIX=""                                                                            \
+    -DLLVM_ENABLE_RTTI=ON                                                                               \
+    -DLLVM_ENABLE_FFI=ON                                                                                \
+    -DLLVM_INCLUDE_DOCS=OFF                                                                             \
+    -DLLVM_INCLUDE_TESTS=OFF                                                                            \
+    -DFFI_INCLUDE_DIR:PATH="$(pkg-config --variable=includedir libffi)"                                 \
+    -DLLVM_BUILD_LLVM_DYLIB=ON                                                                          \
+    -DLLVM_LINK_LLVM_DYLIB=ON                                                                           \
+    -DLLVM_INSTALL_UTILS=ON                                                                             \
+    -DLLVM_BUILD_DOCS=OFF                                                                               \
+    -DLLVM_ENABLE_DOXYGEN=OFF                                                                           \
+    -DLLVM_ENABLE_SPHINX=OFF                                                                            \
+    -DSPHINX_OUTPUT_HTML:BOOL=OFF                                                                       \
+    -DSPHINX_WARNINGS_AS_ERRORS=OFF                                                                     \
+    -DPOLLY_ENABLE_GPGPU_CODEGEN=ON                                                                     \
+    -DLLDB_USE_SYSTEM_SIX=1                                                                             \
+    -DLLVM_ENABLE_PROJECTS="polly;lldb;lld;compiler-rt;clang-tools-extra;clang"                         \
+    -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind;openmp"                                          \
+    -DLLVM_LIT_ARGS="-sv --ignore-fail"                                                                 \
+    -DLLVM_ENABLE_DUMP=ON                                                                               \
+    -DCMAKE_C_FLAGS="-w"                                                                                \
+    -DCMAKE_CXX_FLAGS="-w"                                                                              \
     && cmake --build build --target install
 
 ## Pyenv
