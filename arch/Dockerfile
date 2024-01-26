@@ -62,7 +62,7 @@ RUN git clone https://github.com/llvm/llvm-project.git ${USERHOME}/.local/tools/
     -DLLVM_ENABLE_DUMP=ON                                                                                   \
     -DCMAKE_C_FLAGS="-w"                                                                                    \
     -DCMAKE_CXX_FLAGS="-w"                                                                                  \
-    > &/dev/null                                                                                            \
+    > /dev/null                                                                                            \
     && cmake --build build --target install
 RUN echo 'export LD_LIBRARY_PATH=$HOME/.local/lib/x86_64-unknown-linux-gnu:$LD_LIBRARY_PATH' >> ${USERHOME}/.zshrc_local
 
