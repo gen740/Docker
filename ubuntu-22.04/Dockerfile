@@ -34,11 +34,13 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y     
 # Install go##################################################
 RUN cd ${USERHOME}                                                              \
     && wget https://go.dev/dl/go1.21.6.linux-amd64.tar.gz                       \
-    && echo ${USER} | sudo -S tar -C /usr/local -xzf ./go1.21.6.linux-amd64.tar.gz
+    && echo ${USER} | sudo -S tar -C /usr/local -xzf ./go1.21.6.linux-amd64.tar.gz \
+    && rm ./go1.21.6.linux-amd64.tar.gz
 
 # Install fzf ##################################################
 RUN export PATH=$PATH:/usr/local/go/bin                                         \
-    && cd ${USERHOME}                                                           \
+    && mkdir ${USERHOME}/.local                                                 \
+    && cd ${USERHOME}/.local                                                    \
     && curl https://raw.githubusercontent.com/junegunn/fzf/master/install | zsh
 
 # Install neovim ###############################################################

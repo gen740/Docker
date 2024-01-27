@@ -2,9 +2,13 @@
 
 set -ex
 
+# Locale dependencies
+apt-get -y install tzdata locales
+
+# LLVM latest
+apt-get -y install lsb-release wget software-properties-common gnupg
 bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
 
-apt-get -y install tzdata locales
 
 # Neovim dependencies
 # https://github.com/neovim/neovim/blob/master/BUILD.md#ubuntu--debian
