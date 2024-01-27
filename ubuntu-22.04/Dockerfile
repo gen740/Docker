@@ -54,6 +54,7 @@ RUN export PATH=$PATH:/usr/local/go/bin                                         
     && echo ${USER} | sudo -S curl https://raw.githubusercontent.com/junegunn/fzf/master/install | zsh
 
 # Install neovim ###############################################################
+RUN ln -sf /bin/fdfind ${USERHOME}/.local/bin/fd
 RUN git clone https://github.com/neovim/neovim.git ${USERHOME}/.local/tools/neovim                  \
     && cd ${USERHOME}/.local/tools/neovim                                                           \
     && echo ${USER} | sudo -S make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/usr/local install
