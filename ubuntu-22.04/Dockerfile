@@ -74,7 +74,8 @@ RUN git clone https://github.com/nodenv/nodenv.git ${NODENV_ROOT}   \
     && cd ${NODENV_ROOT}                                            \
     && src/configure                                                \
     && make -C src
-
+RUN git clone https://github.com/nodenv/node-build.git ${NODENV_ROOT}/plugins/node-build
+RUN ${NODENV_ROOT}/bin/nodenv --help | rg install && sleep 10
 RUN ${NODENV_ROOT}/bin/nodenv install 20.9.0                        \
     && ${NODENV_ROOT}/bin/nodenv global 20.9.0
 
