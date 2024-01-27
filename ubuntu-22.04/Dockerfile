@@ -24,7 +24,7 @@ USER ${USER}
 
 # Install Cmake ################################################################
 RUN cd ${USERHOME}                                                                                                      \
-    && wget -O cmake_install.sh https://github.com/Kitware/CMake/releases/download/v3.28.0/cmake-3.28.0-linux-x86_64.sh \
+    && wget -q -O cmake_install.sh https://github.com/Kitware/CMake/releases/download/v3.28.0/cmake-3.28.0-linux-x86_64.sh \
     && chmod +x cmake_install.sh                                                                                        \
     && echo ${USER} | sudo -S ./cmake_install.sh --prefix=/usr/local --skip-license                                        \
     && rm cmake_install.sh
@@ -36,7 +36,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y     
 
 # Install go ###################################################################
 RUN cd ${USERHOME}                                                              \
-    && wget https://go.dev/dl/go1.21.6.linux-amd64.tar.gz                       \
+    && wget -q https://go.dev/dl/go1.21.6.linux-amd64.tar.gz                       \
     && echo ${USER} | sudo -S tar -C /usr/local -xzf ./go1.21.6.linux-amd64.tar.gz \
     && rm ./go1.21.6.linux-amd64.tar.gz
 
@@ -69,7 +69,7 @@ RUN git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles      
 
 # Intall Ninja
 RUN cd ${USERHOME}                                                              \
-    && wget https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-linux.zip \
+    && wget -q https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-linux.zip \
     && echo ${USER} | sudo -S unzip ninja-linux.zip -d /usr/local/bin
 
 # Download plugins ##############################################################

@@ -7,7 +7,7 @@ apt-get -y install tzdata locales
 
 # LLVM latest
 apt-get -y install lsb-release wget software-properties-common gnupg
-wget https://apt.llvm.org/llvm.sh
+wget -q https://apt.llvm.org/llvm.sh
 chmod +x llvm.sh
 ./llvm.sh 18 all
 rm llvm.sh
