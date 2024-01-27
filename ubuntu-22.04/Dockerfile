@@ -30,7 +30,7 @@ RUN git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles      
 RUN cd ${USERHOME}                                                                                                      \
     && wget -O cmake_install.sh https://github.com/Kitware/CMake/releases/download/v3.28.0/cmake-3.28.0-linux-x86_64.sh \
     && chmod +x cmake_install.sh                                                                                        \
-    && echo ${USER} | sudo ./cmake_install.sh --prefix=/usr/local --skip-license                                        \
+    && echo ${USER} | sudo -S ./cmake_install.sh --prefix=/usr/local --skip-license                                        \
     && rm cmake_install.sh
 
 # Install Cargo and Rust tools #################################################
