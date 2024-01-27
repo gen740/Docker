@@ -6,6 +6,7 @@ ENV USERHOME /home/${USER}
 ENV XDG_CONFIG_HOME ${USERHOME}/.config
 ENV XDG_DATA_HOME ${USERHOME}/.local/share
 ENV PYENV_ROOT ${XDG_CONFIG_HOME}/pyenv
+ENV NODENV_ROOT ${XDG_CONFIG_HOME}/nodenv
 ENV TZ=Asia/Tokyo
 
 RUN useradd -m --groups sudo ${USER}                                            \
@@ -68,6 +69,12 @@ RUN ${PYENV_ROOT}/bin/pyenv install 3.12.1                                      
     && ${PYENV_ROOT}/bin/pyenv virtualenv 3.12.1 main                           \
     && ${PYENV_ROOT}/bin/pyenv global main
 
+# Install nodenv and setup node ################################################
+RUN git clone https://github.com/nodenv/nodenv.git ${NODENV_ROOT}   \
+    && cd ${NODENV_ROOT}
+RUN ${NODENV_ROOT}/bin/nodenv install 20.9.0                        \
+    && ${NODENV_ROOT}/bin/nodenv global 20.9.0
+
 # Configure dotfiles ###########################################################
 RUN git clone https://github.com/gen740/config.nvim.git ${XDG_CONFIG_HOME}/nvim
 RUN git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles      \
@@ -75,10 +82,10 @@ RUN git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles      
     && echo 'export TERM=wezterm' >> ${USERHOME}/.zshrc_local
 
 # Download plugins #############################################################
- RUN nvim -c 'quit'
- RUN cd ${USERHOME}/.dotfiles/zsh_tools                                                     \
-     && env "CC=/usr/bin/clang-18" "CXX=/usr/bin/clang++-18" cmake -B build -S . -GNinja    \
-     && echo ${USER} | sudo -S cmake --build build --target install
+RUN nvim -c 'quit'
+RUN cd ${USERHOME}/.dotfiles/zsh_tools                                                     \
+    && env "CC=/usr/bin/clang-18" "CXX=/usr/bin/clang++-18" cmake -B build -S . -GNinja    \
+    && echo ${USER} | sudo -S cmake --build build --target install
 
 ################################################################################
 RUN echo ${USER} | sudo -S chown -R ${USER}:${USER} ${USERHOME}
