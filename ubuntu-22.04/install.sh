@@ -4,7 +4,7 @@ set -ex
 
 bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
 
-apt-get -y install tzdata
+apt-get -y install tzdata locales
 
 # Neovim dependencies
 # https://github.com/neovim/neovim/blob/master/BUILD.md#ubuntu--debian
@@ -21,4 +21,6 @@ apt-get -y install wget git zsh tmux fd-find ripgrep aptitude
 
 ## locale configuration
 ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone
+sed -i '/^#.*en_US.UTF-8/s/^#//' /etc/locale.gen
+locale-gen
 yes | apt-get install -y sudo

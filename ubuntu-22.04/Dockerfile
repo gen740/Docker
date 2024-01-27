@@ -5,6 +5,7 @@ ENV USER gen740
 ENV USERHOME /home/${USER}
 ENV XDG_CONFIG_HOME ${USERHOME}/.config
 ENV XDG_DATA_HOME ${USERHOME}/.local/share
+ENV PYENV_ROOT ${XDG_CONFIG_HOME}/pyenv
 ENV TZ=Asia/Tokyo
 
 RUN useradd -m --groups sudo ${USER}                                            \
@@ -45,16 +46,16 @@ RUN git clone https://github.com/neovim/neovim.git ${USERHOME}/.local/tools/neov
     && cd ${USERHOME}/.local/tools/neovim \
     && make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=${USERHOME}/.local install
 
-# install pyenv and setup python ##################################################
-RUN git clone https://github.com/pyenv/pyenv.git ${XDG_CONFIG_HOME}/pyenv       \
-    && cd ${XDG_CONFIG_HOME}/pyenv                                              \
+# Install pyenv and setup python ##################################################
+RUN git clone https://github.com/pyenv/pyenv.git ${PYENV_ROOT}                  \
+    && cd ${PYENV_ROOT}                                                         \
     && src/configure                                                            \
     && make -C src
 RUN git clone https://github.com/pyenv/pyenv-virtualenv.git ${XDG_CONFIG_HOME}/pyenv/plugins/pyenv-virtualenv \
     && git clone https://github.com/pyenv/pyenv-update.git  ${XDG_CONFIG_HOME}/pyenv/plugins/pyenv-update
-RUN ${XDG_CONFIG_HOME}/pyenv/bin/pyenv install 3.12.1                           \
-    && ${XDG_CONFIG_HOME}/pyenv/bin/pyenv virtualenv 3.12.1 main                \
-    && ${XDG_CONFIG_HOME}/pyenv/bin/pyenv global main
+RUN ${PYENV_ROOT}/bin/pyenv install 3.12.1                                      \
+    && ${PYENV_ROOT}/bin/pyenv virtualenv 3.12.1 main                           \
+    && ${PYENV_ROOT}/bin/pyenv global main
 
 ################################################################################
 RUN echo ${USER} | sudo -S chown -R ${USER}:${USER} ${USERHOME}
