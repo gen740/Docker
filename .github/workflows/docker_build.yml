@@ -16,7 +16,7 @@ jobs:
     - name: Build the Docker image
       run: |
         cd ubuntu-22.04
-        docker build . -t gen740/test-ubuntu-22.04:latest
+        docker build . -t gen740/ubuntu-22.04:latest
       env:
         DOCKER_BUILDKIT: 1
 
@@ -25,4 +25,4 @@ jobs:
         DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
       run: |
         echo "${DOCKER_HUB_TOKEN}" | docker login -u gen740 --password-stdin
-        docker push gen740/test-ubuntu-22.04:latest
+        docker push gen740/ubuntu-22.04:latest
