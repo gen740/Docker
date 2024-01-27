@@ -67,6 +67,11 @@ RUN git clone https://github.com/gen740/config.nvim.git ${XDG_CONFIG_HOME}/nvim
 RUN git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles      \
     && ${USERHOME}/.dotfiles/setup.zsh
 
+# Intall Ninja
+RUN cd ${USERHOME}                                                              \
+    && wget https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-linux.zip \
+    && echo ${USER} | sudo -S unzip ninja-linux.zip -d /usr/local/bin
+
 # Download plugins ##############################################################
  RUN nvim -c 'quit'
  RUN cd ${USERHOME}/.dotfiles/zsh_tools                                                     \
