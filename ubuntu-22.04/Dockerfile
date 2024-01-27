@@ -71,7 +71,10 @@ RUN ${PYENV_ROOT}/bin/pyenv install 3.12.1                                      
 
 # Install nodenv and setup node ################################################
 RUN git clone https://github.com/nodenv/nodenv.git ${NODENV_ROOT}   \
-    && cd ${NODENV_ROOT}
+    && cd ${NODENV_ROOT}                                            \
+    && src/configure                                                \
+    && make -C src
+
 RUN ${NODENV_ROOT}/bin/nodenv install 20.9.0                        \
     && ${NODENV_ROOT}/bin/nodenv global 20.9.0
 
