@@ -31,12 +31,13 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y     
     && ${USERHOME}/.cargo/bin/cargo install lsd
 
 # Install go##################################################
-RUN wget https://go.dev/dl/go1.21.6.linux-amd64.tar.gz                          \
-    && echo ${USER} | sudo -S tar -C /usr/local -xzf go1.21.6.linux-amd64.tar.gz
+RUN cd ${USERHOME}                                                              \
+    && wget https://go.dev/dl/go1.21.6.linux-amd64.tar.gz                       \
+    && echo ${USER} | sudo -S tar -C /usr/local -xzf ./go1.21.6.linux-amd64.tar.gz
 
 # Install fzf ##################################################
 RUN export PATH=$PATH:/usr/local/go/bin                                         \
-    && cd ${USERHOME}/.local                                                    \
+    && cd ${USERHOME}                                                           \
     && curl https://raw.githubusercontent.com/junegunn/fzf/master/install | zsh
 
 # Install neovim ###############################################################
@@ -49,6 +50,11 @@ RUN git clone https://github.com/pyenv/pyenv.git ${XDG_CONFIG_HOME}/pyenv       
     && cd ${XDG_CONFIG_HOME}/pyenv                                              \
     && src/configure                                                            \
     && make -C src
+RUN git clone https://github.com/pyenv/pyenv-virtualenv.git ${XDG_CONFIG_HOME}/pyenv/plugins/pyenv-virtualenv \
+    && git clone https://github.com/pyenv/pyenv-update.git  ${XDG_CONFIG_HOME}/pyenv/plugins/pyenv-update
+RUN ${XDG_CONFIG_HOME}/pyenv/bin/pyenv install 3.12.1                           \
+    && ${XDG_CONFIG_HOME}/pyenv/bin/pyenv virtualenv 3.12.1 main                \
+    && ${XDG_CONFIG_HOME}/pyenv/bin/pyenv global main
 
 ################################################################################
 RUN echo ${USER} | sudo -S chown -R ${USER}:${USER} ${USERHOME}
