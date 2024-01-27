@@ -26,27 +26,32 @@ RUN git clone https://github.com/gen740/config.nvim.git ${XDG_CONFIG_HOME}/nvim
 RUN git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles      \
     && ${USERHOME}/.dotfiles/setup.zsh
 
+# Install Cmake ################################################################
+RUN wget -O cmake_install.sh https://github.com/Kitware/CMake/releases/download/v3.28.0/cmake-3.28.0-linux-x86_64.sh    \
+    && chmod +x cmake_install.sh                                                                                        \
+    && echo ${USER} | sudo ./cmake_install.sh --prefix=/usr/local --skip-license                                        \
+    && rm cmake_install.sh
+
 # Install Cargo and Rust tools #################################################
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y     \
     && ${USERHOME}/.cargo/bin/rustup update                                     \
     && ${USERHOME}/.cargo/bin/cargo install lsd
 
-# Install go##################################################
+# Install go ###################################################################
 RUN cd ${USERHOME}                                                              \
     && wget https://go.dev/dl/go1.21.6.linux-amd64.tar.gz                       \
     && echo ${USER} | sudo -S tar -C /usr/local -xzf ./go1.21.6.linux-amd64.tar.gz \
     && rm ./go1.21.6.linux-amd64.tar.gz
 
-# Install fzf ##################################################
+# Install fzf ##################################################################
 RUN export PATH=$PATH:/usr/local/go/bin                                         \
-    && mkdir ${USERHOME}/.local                                                 \
-    && cd ${USERHOME}/.local                                                    \
+    && cd /usr/local                                                            \
     && curl https://raw.githubusercontent.com/junegunn/fzf/master/install | zsh
 
 # Install neovim ###############################################################
-RUN git clone https://github.com/neovim/neovim.git ${USERHOME}/.local/tools/neovim \
-    && cd ${USERHOME}/.local/tools/neovim \
-    && make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=${USERHOME}/.local install
+RUN git clone https://github.com/neovim/neovim.git ${USERHOME}/.local/tools/neovim                  \
+    && cd ${USERHOME}/.local/tools/neovim                                                           \
+    && echo ${USER} | sudo -S make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/usr/local install
 
 # Install pyenv and setup python ##################################################
 RUN git clone https://github.com/pyenv/pyenv.git ${PYENV_ROOT}                  \

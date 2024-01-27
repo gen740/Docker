@@ -9,7 +9,6 @@ apt-get -y install tzdata locales
 apt-get -y install lsb-release wget software-properties-common gnupg
 bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
 
-
 # Neovim dependencies
 # https://github.com/neovim/neovim/blob/master/BUILD.md#ubuntu--debian
 apt-get -y install ninja-build gettext cmake unzip curl
