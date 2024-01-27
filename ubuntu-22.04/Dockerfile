@@ -22,10 +22,6 @@ RUN ${USERHOME}/install.sh                                                      
 
 USER ${USER}
 
-RUN git clone https://github.com/gen740/config.nvim.git ${XDG_CONFIG_HOME}/nvim
-RUN git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles      \
-    && ${USERHOME}/.dotfiles/setup.zsh
-
 # Install Cmake ################################################################
 RUN cd ${USERHOME}                                                                                                      \
     && wget -O cmake_install.sh https://github.com/Kitware/CMake/releases/download/v3.28.0/cmake-3.28.0-linux-x86_64.sh \
@@ -46,8 +42,9 @@ RUN cd ${USERHOME}                                                              
 
 # Install fzf ##################################################################
 RUN export PATH=$PATH:/usr/local/go/bin                                         \
-    && cd /usr/local                                                            \
-    && curl https://raw.githubusercontent.com/junegunn/fzf/master/install | zsh
+    && mkdir ${USERHOME}/.local                                                 \
+    && cd ${USERHOME}/.local                                                    \
+    && echo ${USER} | sudo -S curl https://raw.githubusercontent.com/junegunn/fzf/master/install | zsh
 
 # Install neovim ###############################################################
 RUN git clone https://github.com/neovim/neovim.git ${USERHOME}/.local/tools/neovim                  \
@@ -64,6 +61,17 @@ RUN git clone https://github.com/pyenv/pyenv-virtualenv.git ${XDG_CONFIG_HOME}/p
 RUN ${PYENV_ROOT}/bin/pyenv install 3.12.1                                      \
     && ${PYENV_ROOT}/bin/pyenv virtualenv 3.12.1 main                           \
     && ${PYENV_ROOT}/bin/pyenv global main
+
+# Configure dotfiles ############################################################
+RUN git clone https://github.com/gen740/config.nvim.git ${XDG_CONFIG_HOME}/nvim
+RUN git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles      \
+    && ${USERHOME}/.dotfiles/setup.zsh
+
+# Download plugins ##############################################################
+ RUN nvim -c 'quit'
+ RUN cd ${USERHOME}/.dotfiles/zsh_tools                                                     \
+     && env "CC=/usr/bin/clang-18" "CXX=/usr/bin/clang++-18" cmake -B build -S . -GNinja    \
+     && echo ${USER} | sudo -S cmake --build build --target install
 
 ################################################################################
 RUN echo ${USER} | sudo -S chown -R ${USER}:${USER} ${USERHOME}
