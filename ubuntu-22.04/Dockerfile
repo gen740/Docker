@@ -85,7 +85,7 @@ RUN git clone https://github.com/nodenv/nodenv.git ${NODENV_ROOT} --depth 1     
 RUN git clone https://github.com/gen740/config.nvim.git ${XDG_CONFIG_HOME}/nvim --depth 1 \
     && ${USERHOME}/.dotfiles/setup.zsh                                                    \
     && echo 'export TERM=wezterm' >> ${USERHOME}/.zshrc_local                             \
-    && nvim -c 'TSInstallSync all' -c 'quit'                                              \
+    && nvim -c 'quit'                                                                     \
     && git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles --depth 1   \
     && cd ${USERHOME}/.dotfiles/zsh_tools                                                 \
     && env "CC=/usr/bin/clang-18" "CXX=/usr/bin/clang++-18" cmake -B build -S . -GNinja   \
