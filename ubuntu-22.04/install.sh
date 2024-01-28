@@ -24,6 +24,7 @@ apt-get -y install build-essential libssl-dev zlib1g-dev \
 
 # Tools
 apt-get -y install wget git zsh tmux fd-find ripgrep aptitude
+ln -sf /bin/fdfind /usr/local/bin/fd
 apt-get -y install direnv
 
 ## locale configuration
