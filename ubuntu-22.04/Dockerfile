@@ -59,7 +59,7 @@ RUN cd ${USERHOME}/.local                                               \
     && cd cli                                                           \
     && echo ${USER} | sudo -S PATH=$PATH:/usr/local/go/bin make install \
     && cd ..                                                            \
-    && rm -rf cli
+    && echo ${USER} | sudo -S rm -rf cli
 
 # Install neovim ###############################################################
 RUN ln -sf /bin/fdfind ${USERHOME}/.local/bin/fd
