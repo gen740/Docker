@@ -40,7 +40,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     && ${USERHOME}/.cargo/bin/rustup update                                 \
     && ${USERHOME}/.cargo/bin/cargo install lsd                             \
     && rm -rf ${USERHOME}/.cargo/registry                                   \
-    && rustup toolchain remove stable
+    && ${USERHOME}/.cargo/bin/rustup toolchain remove stable
 
 # Install go ###################################################################
 RUN cd ${USERHOME}                                                                  \
@@ -90,7 +90,7 @@ RUN git clone https://github.com/gen740/config.nvim.git ${XDG_CONFIG_HOME}/nvim 
     && git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles --depth 1   \
     && ${USERHOME}/.dotfiles/setup.zsh                                                    \
     && echo 'export TERM=wezterm' >> ${USERHOME}/.zshrc_local                             \
-    && nvim -c 'quit'
+    && nvim -c 'TSInstall all' -c 'quit'
 
 # Download plugins #############################################################
 RUN cd ${USERHOME}/.dotfiles/zsh_tools                                                     \
