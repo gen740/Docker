@@ -83,10 +83,10 @@ RUN git clone https://github.com/nodenv/nodenv.git ${NODENV_ROOT} --depth 1     
 
 # Configure dotfiles ###########################################################
 RUN git clone https://github.com/gen740/config.nvim.git ${XDG_CONFIG_HOME}/nvim --depth 1 \
-    && ${USERHOME}/.dotfiles/setup.zsh                                                    \
-    && echo 'export TERM=wezterm' >> ${USERHOME}/.zshrc_local                             \
     && nvim -c 'quit'                                                                     \
     && git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles --depth 1   \
+    && ${USERHOME}/.dotfiles/setup.zsh                                                    \
+    && echo 'export TERM=wezterm' >> ${USERHOME}/.zshrc_local                             \
     && cd ${USERHOME}/.dotfiles/zsh_tools                                                 \
     && env "CC=/usr/bin/clang-18" "CXX=/usr/bin/clang++-18" cmake -B build -S . -GNinja   \
     && echo ${USER} | sudo -S cmake --build build --target install
