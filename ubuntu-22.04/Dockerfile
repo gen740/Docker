@@ -15,22 +15,20 @@ RUN useradd -m --groups sudo ${USER}                                            
 
 COPY install.sh ${USERHOME}/install.sh
 
-RUN ${USERHOME}/install.sh                                                      \
-    && rm ${USERHOME}/install.sh
+RUN ${USERHOME}/install.sh && rm ${USERHOME}/install.sh
 
 USER ${USER}
 
-# Install Cmake ################################################################
+# Install Cmake/Ninja ################################################################
 RUN cd ${USERHOME}                                                                                                         \
     && wget -q -O cmake_install.sh https://github.com/Kitware/CMake/releases/download/v3.28.1/cmake-3.28.1-linux-x86_64.sh \
     && chmod +x cmake_install.sh                                                                                           \
     && echo ${USER} | sudo -S ./cmake_install.sh --prefix=/usr/local --skip-license                                        \
-    && rm cmake_install.sh
-
-# Intall Ninja #################################################################
-RUN cd ${USERHOME}                                                                            \
-    && wget -q https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-linux.zip \
-    && echo ${USER} | sudo -S unzip ninja-linux.zip -d /usr/local/bin                         \
+    && rm cmake_install.sh                                                                                                 \
+    # Ninja
+    && cd ${USERHOME}                                                                                                      \
+    && wget -q https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-linux.zip                              \
+    && echo ${USER} | sudo -S unzip ninja-linux.zip -d /usr/local/bin                                                      \
     && rm ninja-linux.zip
 
 # Install Cargo and Rust tools #################################################
@@ -49,15 +47,14 @@ RUN cd ${USERHOME}                                                              
     && yes | ${USERHOME}/.fzf/install
 
 # Install gh ###################################################################
-RUN cd ${USERHOME}                                                      \
-    && git clone https://github.com/cli/cli.git cli --depth 1           \
-    && cd cli                                                           \
-    && echo ${USER} | sudo -S PATH=$PATH:/usr/local/go/bin make install \
-    && cd ..                                                            \
-    && echo ${USER} | sudo -S rm -rf cli
-
-# Install neovim ###############################################################
-RUN git clone https://github.com/neovim/neovim.git ${USERHOME}/neovim                               \
+RUN cd ${USERHOME}                                                                                  \
+    && git clone https://github.com/cli/cli.git cli --depth 1                                       \
+    && cd cli                                                                                       \
+    && echo ${USER} | sudo -S PATH=$PATH:/usr/local/go/bin make install                             \
+    && cd ..                                                                                        \
+    && echo ${USER} | sudo -S rm -rf cli                                                            \
+    # Install neovim
+    && git clone https://github.com/neovim/neovim.git ${USERHOME}/neovim                            \
     && cd ${USERHOME}/neovim                                                                        \
     && echo ${USER} | sudo -S make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/usr/local install \
     && echo ${USER} | sudo -S rm -rf ${USERHOME}/neovim
@@ -71,14 +68,13 @@ RUN git clone https://github.com/pyenv/pyenv.git ${PYENV_ROOT} --depth 1        
     && git clone https://github.com/pyenv/pyenv-update.git  ${XDG_CONFIG_HOME}/pyenv/plugins/pyenv-update --depth 1        \
     && ${PYENV_ROOT}/bin/pyenv install 3.12.1                                                                              \
     && ${PYENV_ROOT}/bin/pyenv virtualenv 3.12.1 main                                                                      \
-    && ${PYENV_ROOT}/bin/pyenv global main
-
-# Install nodenv and setup node ################################################
-RUN git clone https://github.com/nodenv/nodenv.git ${NODENV_ROOT} --depth 1                           \
-    && git clone https://github.com/nodenv/node-build.git ${NODENV_ROOT}/plugins/node-build --depth 1 \
-    && cd ${NODENV_ROOT}                                                                              \
-    && src/configure                                                                                  \
-    && make -C src                                                                                    \
+    && ${PYENV_ROOT}/bin/pyenv global main                                                                                 \
+    # Install nodenv and setup node 
+    && git clone https://github.com/nodenv/nodenv.git ${NODENV_ROOT} --depth 1                                             \
+    && git clone https://github.com/nodenv/node-build.git ${NODENV_ROOT}/plugins/node-build --depth 1                      \
+    && cd ${NODENV_ROOT}                                                                                                   \
+    && src/configure                                                                                                       \
+    && make -C src                                                                                                         \
     && ${NODENV_ROOT}/bin/nodenv install 20.9.0 && ${NODENV_ROOT}/bin/nodenv global 20.9.0
 
 # Configure dotfiles ###########################################################
