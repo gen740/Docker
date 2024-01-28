@@ -24,7 +24,7 @@ USER ${USER}
 
 # Install Cmake ################################################################
 RUN cd ${USERHOME}                                                                                                         \
-    && wget -q -O cmake_install.sh https://github.com/Kitware/CMake/releases/download/v3.28.0/cmake-3.28.0-linux-x86_64.sh \
+    && wget -q -O cmake_install.sh https://github.com/Kitware/CMake/releases/download/v3.28.1/cmake-3.28.1-linux-x86_64.sh \
     && chmod +x cmake_install.sh                                                                                           \
     && echo ${USER} | sudo -S ./cmake_install.sh --prefix=/usr/local --skip-license                                        \
     && rm cmake_install.sh
@@ -38,7 +38,9 @@ RUN cd ${USERHOME}                                                              
 # Install Cargo and Rust tools #################################################
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     && ${USERHOME}/.cargo/bin/rustup update                                 \
-    && ${USERHOME}/.cargo/bin/cargo install lsd
+    && ${USERHOME}/.cargo/bin/cargo install lsd                             \
+    && rm -rf ${USERHOME}/.cargo/registry                                   \
+    && rustup toolchain remove stable
 
 # Install go ###################################################################
 RUN cd ${USERHOME}                                                                  \
