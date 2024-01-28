@@ -58,7 +58,7 @@ RUN export PATH=$PATH:/usr/local/go/bin                                         
     && cd ${USERHOME}/.local                                                                            \
     && git clone https://github.com/cli/cli.git cli --depth 1                                        \
     && cd cli                                                                                        \
-    && echo ${USER} | sudo -S make install                                                              \
+    && echo ${USER} | sudo -S -E make install                                                              \
     && cd ..                                                                                            \
     && rm -rf cli
 
