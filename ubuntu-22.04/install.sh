@@ -2,6 +2,8 @@
 
 set -ex
 
+apt-get -y update && apt-get -y upgrade
+
 # Locale dependencies
 apt-get -y install tzdata locales
 

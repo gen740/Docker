@@ -13,10 +13,8 @@ RUN useradd -m --groups sudo ${USER}                                            
     && echo "${USER}:${USER}" | chpasswd                                        \
     && echo "ALL ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-RUN apt-get -y update                                                           \
-    && apt-get -y upgrade
-
 COPY install.sh ${USERHOME}/install.sh
+
 RUN ${USERHOME}/install.sh                                                      \
     && rm ${USERHOME}/install.sh
 
@@ -46,10 +44,8 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
 RUN cd ${USERHOME}                                                                  \
     && wget -q https://go.dev/dl/go1.21.6.linux-amd64.tar.gz                        \
     && echo ${USER} | sudo -S tar -C /usr/local -xzf ./go1.21.6.linux-amd64.tar.gz  \
-    && rm ./go1.21.6.linux-amd64.tar.gz
-
-# Install fzf ##################################################################
-RUN git clone --depth 1 https://github.com/junegunn/fzf.git ${USERHOME}/.fzf  \
+    && rm ./go1.21.6.linux-amd64.tar.gz                                             \
+    && git clone --depth 1 https://github.com/junegunn/fzf.git ${USERHOME}/.fzf     \
     && yes | ${USERHOME}/.fzf/install
 
 # Install gh ###################################################################
@@ -67,14 +63,14 @@ RUN git clone https://github.com/neovim/neovim.git ${USERHOME}/neovim           
     && echo ${USER} | sudo -S rm -rf ${USERHOME}/neovim
 
 # Install pyenv and setup python ###############################################
-RUN git clone https://github.com/pyenv/pyenv.git ${PYENV_ROOT} --depth 1 \
-    && cd ${PYENV_ROOT}                                                  \
-    && src/configure                                                     \
-    && make -C src
-RUN git clone https://github.com/pyenv/pyenv-virtualenv.git ${XDG_CONFIG_HOME}/pyenv/plugins/pyenv-virtualenv --depth 1 \
-    && git clone https://github.com/pyenv/pyenv-update.git  ${XDG_CONFIG_HOME}/pyenv/plugins/pyenv-update --depth 1
-RUN ${PYENV_ROOT}/bin/pyenv install 3.12.1                                      \
-    && ${PYENV_ROOT}/bin/pyenv virtualenv 3.12.1 main                           \
+RUN git clone https://github.com/pyenv/pyenv.git ${PYENV_ROOT} --depth 1                                                   \
+    && cd ${PYENV_ROOT}                                                                                                    \
+    && src/configure                                                                                                       \
+    && make -C src                                                                                                         \
+    && git clone https://github.com/pyenv/pyenv-virtualenv.git ${XDG_CONFIG_HOME}/pyenv/plugins/pyenv-virtualenv --depth 1 \
+    && git clone https://github.com/pyenv/pyenv-update.git  ${XDG_CONFIG_HOME}/pyenv/plugins/pyenv-update --depth 1        \
+    && ${PYENV_ROOT}/bin/pyenv install 3.12.1                                                                              \
+    && ${PYENV_ROOT}/bin/pyenv virtualenv 3.12.1 main                                                                      \
     && ${PYENV_ROOT}/bin/pyenv global main
 
 # Install nodenv and setup node ################################################
@@ -82,19 +78,17 @@ RUN git clone https://github.com/nodenv/nodenv.git ${NODENV_ROOT} --depth 1     
     && git clone https://github.com/nodenv/node-build.git ${NODENV_ROOT}/plugins/node-build --depth 1 \
     && cd ${NODENV_ROOT}                                                                              \
     && src/configure                                                                                  \
-    && make -C src
-RUN ${NODENV_ROOT}/bin/nodenv install 20.9.0 && ${NODENV_ROOT}/bin/nodenv global 20.9.0
+    && make -C src                                                                                    \
+    && ${NODENV_ROOT}/bin/nodenv install 20.9.0 && ${NODENV_ROOT}/bin/nodenv global 20.9.0
 
 # Configure dotfiles ###########################################################
 RUN git clone https://github.com/gen740/config.nvim.git ${XDG_CONFIG_HOME}/nvim --depth 1 \
-    && git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles --depth 1   \
     && ${USERHOME}/.dotfiles/setup.zsh                                                    \
     && echo 'export TERM=wezterm' >> ${USERHOME}/.zshrc_local                             \
-    && nvim -c 'TSInstallSync all' -c 'quit'
-
-# Download plugins #############################################################
-RUN cd ${USERHOME}/.dotfiles/zsh_tools                                                     \
-    && env "CC=/usr/bin/clang-18" "CXX=/usr/bin/clang++-18" cmake -B build -S . -GNinja    \
+    && nvim -c 'TSInstallSync all' -c 'quit'                                              \
+    && git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles --depth 1   \
+    && cd ${USERHOME}/.dotfiles/zsh_tools                                                 \
+    && env "CC=/usr/bin/clang-18" "CXX=/usr/bin/clang++-18" cmake -B build -S . -GNinja   \
     && echo ${USER} | sudo -S cmake --build build --target install
 
 ################################################################################
