@@ -24,21 +24,21 @@ RUN ${USERHOME}/install.sh                                                      
 USER ${USER}
 
 # Install Cmake ################################################################
-RUN cd ${USERHOME}                                                                                                          \
-    && wget -q -O cmake_install.sh https://github.com/Kitware/CMake/releases/download/v3.28.0/cmake-3.28.0-linux-x86_64.sh  \
-    && chmod +x cmake_install.sh                                                                                            \
-    && echo ${USER} | sudo -S ./cmake_install.sh --prefix=/usr/local --skip-license                                         \
+RUN cd ${USERHOME}                                                                                                         \
+    && wget -q -O cmake_install.sh https://github.com/Kitware/CMake/releases/download/v3.28.0/cmake-3.28.0-linux-x86_64.sh \
+    && chmod +x cmake_install.sh                                                                                           \
+    && echo ${USER} | sudo -S ./cmake_install.sh --prefix=/usr/local --skip-license                                        \
     && rm cmake_install.sh
 
 # Intall Ninja #################################################################
-RUN cd ${USERHOME}                                                                              \
-    && wget -q https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-linux.zip   \
-    && echo ${USER} | sudo -S unzip ninja-linux.zip -d /usr/local/bin                           \
+RUN cd ${USERHOME}                                                                            \
+    && wget -q https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-linux.zip \
+    && echo ${USER} | sudo -S unzip ninja-linux.zip -d /usr/local/bin                         \
     && rm ninja-linux.zip
 
 # Install Cargo and Rust tools #################################################
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y                                                 \
-    && ${USERHOME}/.cargo/bin/rustup update                                                                                 \
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
+    && ${USERHOME}/.cargo/bin/rustup update                                 \
     && ${USERHOME}/.cargo/bin/cargo install lsd
 
 # Install go ###################################################################
@@ -56,9 +56,11 @@ RUN export PATH=$PATH:/usr/local/go/bin                                         
 # Install gh ###################################################################
 RUN export PATH=$PATH:/usr/local/go/bin                                                                 \
     && cd ${USERHOME}/.local                                                                            \
-    && git clone https://github.com/cli/cli.git gh-cli --depth 1                                        \
-    && cd gh-cli                                                                                        \
-    && echo ${USER} | sudo -S make install
+    && git clone https://github.com/cli/cli.git cli --depth 1                                        \
+    && cd cli                                                                                        \
+    && echo ${USER} | sudo -S make install                                                              \
+    && cd ..                                                                                            \
+    && rm -rf cli
 
 # Install neovim ###############################################################
 RUN ln -sf /bin/fdfind ${USERHOME}/.local/bin/fd
@@ -67,29 +69,28 @@ RUN git clone https://github.com/neovim/neovim.git ${USERHOME}/.local/tools/neov
     && echo ${USER} | sudo -S make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/usr/local install
 
 # Install pyenv and setup python ###############################################
-RUN git clone https://github.com/pyenv/pyenv.git ${PYENV_ROOT}                  \
-    && cd ${PYENV_ROOT}                                                         \
-    && src/configure                                                            \
+RUN git clone https://github.com/pyenv/pyenv.git ${PYENV_ROOT} --depth 1 \
+    && cd ${PYENV_ROOT}                                                  \
+    && src/configure                                                     \
     && make -C src
-RUN git clone https://github.com/pyenv/pyenv-virtualenv.git ${XDG_CONFIG_HOME}/pyenv/plugins/pyenv-virtualenv \
-    && git clone https://github.com/pyenv/pyenv-update.git  ${XDG_CONFIG_HOME}/pyenv/plugins/pyenv-update
+RUN git clone https://github.com/pyenv/pyenv-virtualenv.git ${XDG_CONFIG_HOME}/pyenv/plugins/pyenv-virtualenv --depth 1 \
+    && git clone https://github.com/pyenv/pyenv-update.git  ${XDG_CONFIG_HOME}/pyenv/plugins/pyenv-update --depth 1
 RUN ${PYENV_ROOT}/bin/pyenv install 3.12.1                                      \
     && ${PYENV_ROOT}/bin/pyenv virtualenv 3.12.1 main                           \
     && ${PYENV_ROOT}/bin/pyenv global main
 
 # Install nodenv and setup node ################################################
-RUN git clone https://github.com/nodenv/nodenv.git ${NODENV_ROOT}   \
-    && cd ${NODENV_ROOT}                                            \
-    && src/configure                                                \
+RUN git clone https://github.com/nodenv/nodenv.git ${NODENV_ROOT} --depth 1 \
+    && cd ${NODENV_ROOT}                                                    \
+    && src/configure                                                        \
     && make -C src
-RUN git clone https://github.com/nodenv/node-build.git ${NODENV_ROOT}/plugins/node-build
-RUN ${NODENV_ROOT}/bin/nodenv install 20.9.0                        \
-    && ${NODENV_ROOT}/bin/nodenv global 20.9.0
+RUN git clone https://github.com/nodenv/node-build.git ${NODENV_ROOT}/plugins/node-build --depth 1 
+RUN ${NODENV_ROOT}/bin/nodenv install 20.9.0 && ${NODENV_ROOT}/bin/nodenv global 20.9.0
 
 # Configure dotfiles ###########################################################
-RUN git clone https://github.com/gen740/config.nvim.git ${XDG_CONFIG_HOME}/nvim
-RUN git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles      \
-    && ${USERHOME}/.dotfiles/setup.zsh                                          \
+RUN git clone https://github.com/gen740/config.nvim.git ${XDG_CONFIG_HOME}/nvim --depth 1
+RUN git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles --depth 1 \
+    && ${USERHOME}/.dotfiles/setup.zsh                                               \
     && echo 'export TERM=wezterm' >> ${USERHOME}/.zshrc_local
 
 # Download plugins #############################################################
