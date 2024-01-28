@@ -87,14 +87,14 @@ RUN ${NODENV_ROOT}/bin/nodenv install 20.9.0 && ${NODENV_ROOT}/bin/nodenv global
 RUN git clone https://github.com/gen740/config.nvim.git ${XDG_CONFIG_HOME}/nvim --depth 1 \
     && git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles --depth 1   \
     && ${USERHOME}/.dotfiles/setup.zsh                                                    \
-    && echo 'export TERM=wezterm' >> ${USERHOME}/.zshrc_local
+    && echo 'export TERM=wezterm' >> ${USERHOME}/.zshrc_local                             \
+    && nvim -c 'quit'
 
 # Download plugins #############################################################
-RUN nvim -c 'quit'
 RUN cd ${USERHOME}/.dotfiles/zsh_tools                                                     \
     && env "CC=/usr/bin/clang-18" "CXX=/usr/bin/clang++-18" cmake -B build -S . -GNinja    \
     && echo ${USER} | sudo -S cmake --build build --target install
 
 ################################################################################
-RUN echo ${USER} | sudo -S chown -R ${USER}:${USER} ${USERHOME}
-RUN echo ${USER} | sudo -S chsh -s /bin/zsh
+RUN echo ${USER} | sudo -S chown -R ${USER}:${USER} ${USERHOME} \
+    && echo ${USER} | sudo -S chsh -s /bin/zsh

@@ -32,3 +32,6 @@ ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone
 sed -i '/^#.*en_US.UTF-8/s/^#//' /etc/locale.gen
 locale-gen
 yes | apt-get install -y sudo
+
+apt-get clean
+apt-get autoremove -y
