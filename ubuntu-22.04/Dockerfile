@@ -53,6 +53,13 @@ RUN export PATH=$PATH:/usr/local/go/bin                                         
     && cd ${USERHOME}/.local                                                                            \
     && echo ${USER} | sudo -S curl https://raw.githubusercontent.com/junegunn/fzf/master/install | zsh
 
+# Install gh ###################################################################
+RUN export PATH=$PATH:/usr/local/go/bin                                                                 \
+    && cd ${USERHOME}/.local                                                                            \
+    && git clone https://github.com/cli/cli.git gh-cli --depth 1                                        \
+    && cd gh-cli                                                                                        \
+    && echo ${USER} | sudo -S make install
+
 # Install neovim ###############################################################
 RUN ln -sf /bin/fdfind ${USERHOME}/.local/bin/fd
 RUN git clone https://github.com/neovim/neovim.git ${USERHOME}/.local/tools/neovim                  \

@@ -24,6 +24,7 @@ apt-get -y install build-essential libssl-dev zlib1g-dev \
 
 # Tools
 apt-get -y install wget git zsh tmux fd-find ripgrep aptitude
+apt-get -y install direnv
 
 ## locale configuration
 ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone
