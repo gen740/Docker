@@ -22,7 +22,20 @@ USER ${USER}
 RUN echo ${USER} | sudo -S /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 RUN echo ${USER} | sudo -S chown -R ${USER}:${USER} /home/linuxbrew/.linuxbrew \
     && echo ${USER} | sudo -S chsh -s /bin/zsh
+
+
 RUN /home/linuxbrew/.linuxbrew/bin/brew install llvm
+RUN /home/linuxbrew/.linuxbrew/bin/brew install neovim --HEAD
+
+# Configure dotfiles ###########################################################
+RUN git clone https://github.com/gen740/config.nvim.git ${XDG_CONFIG_HOME}/nvim --depth 1 \
+    && nvim -c 'quit'                                                                     \
+    && git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles --depth 1   \
+    && ${USERHOME}/.dotfiles/setup.zsh                                                    \
+    && echo 'export TERM=wezterm' >> ${USERHOME}/.zshrc_local                             \
+    && cd ${USERHOME}/.dotfiles/zsh_tools                                                 \
+    && env "CXX=/home/linuxbrew/.linuxbrew/bin/clang++" cmake -B build -S . -GNinja   \
+    && echo ${USER} | sudo -S cmake --build build --target install
 
 
 ################################################################################
