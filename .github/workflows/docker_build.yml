@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  dockerbuild:
+  build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -26,3 +26,22 @@ jobs:
       run: |
         echo "${DOCKER_HUB_TOKEN}" | docker login -u gen740 --password-stdin
         docker push gen740/ubuntu-22.04:latest
+
+  build_linuxbrew:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build the Docker image
+      run: |
+        cd ubuntu-22.04-linuxbrew
+        docker build . -t gen740/ubuntu-22.04-linuxbrew:latest
+      env:
+        DOCKER_BUILDKIT: 1
+
+    - name: Push to docker hub
+      env:
+        DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
+      run: |
+        echo "${DOCKER_HUB_TOKEN}" | docker login -u gen740 --password-stdin
+        docker push gen740/ubuntu-22.04-linuxbrew:latest
