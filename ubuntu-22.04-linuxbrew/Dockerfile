@@ -28,16 +28,15 @@ RUN /home/linuxbrew/.linuxbrew/bin/brew install llvm cmake ninja
 RUN /home/linuxbrew/.linuxbrew/bin/brew install neovim --HEAD
 
 # Configure dotfiles ###########################################################
-RUN eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"                                                          \
-    && git clone https://github.com/gen740/config.nvim.git ${XDG_CONFIG_HOME}/nvim --depth 1                        \
-    && nvim -c 'quit'                                                                                               \
-    && git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles --depth 1                             \
-    && ${USERHOME}/.dotfiles/setup.zsh                                                                              \
-    && echo 'export TERM=wezterm' >> ${USERHOME}/.zshrc_local                                                       \
-    && cd ${USERHOME}/.dotfiles/zsh_tools                                                                           \
-    && env "LIBRARY_PATH=$LIBRARY_PATH:/home/linuxbrew/.linuxbrew/lib" "CXX=/home/linuxbrew/.linuxbrew/bin/clang++" \
-        cmake -B build -S . -GNinja -DCMAKE_INSTALL_PREFIX=${USERHOME}/.local \
-    && cmake --build build --target install
+RUN eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"                                                                    \
+    && git clone https://github.com/gen740/config.nvim.git ${XDG_CONFIG_HOME}/nvim --depth 1                                  \
+    && nvim -c 'quit'                                                                                                         \
+    && git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles --depth 1                                       \
+    && ${USERHOME}/.dotfiles/setup.zsh                                                                                        \
+    && echo 'export TERM=wezterm' >> ${USERHOME}/.zshrc_local                                                                 \
+    && cd ${USERHOME}/.dotfiles/zsh_tools                                                                                     \
+    && env "CXX=/home/linuxbrew/.linuxbrew/bin/clang++" cmake -B build -S . -GNinja -DCMAKE_INSTALL_PREFIX=${USERHOME}/.local \
+    && env "LIBRARY_PATH=$LIBRARY_PATH:/home/linuxbrew/.linuxbrew/lib" cmake --build build --target install
 
 RUN /home/linuxbrew/.linuxbrew/bin/brew install tmux tokei direnv fd fzf gh glab lazygit \
     wget git curl jq lsp pre-commit ripgrep go-task pyenv pyenv-virtualenv pyright       \
