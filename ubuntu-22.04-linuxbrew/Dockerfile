@@ -39,7 +39,7 @@ RUN eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"                      
     && env "LIBRARY_PATH=$LIBRARY_PATH:/home/linuxbrew/.linuxbrew/lib" cmake --build build --target install
 
 RUN /home/linuxbrew/.linuxbrew/bin/brew install tmux tokei direnv fd fzf gh glab lazygit \
-    wget git curl jq lsp pre-commit ripgrep go-task pyenv pyenv-virtualenv pyright       \
+    wget git curl jq lsd pre-commit ripgrep go-task pyenv pyenv-virtualenv pyright       \
     nodenv clang-format lua-language-server typescript-language-server                   \
     vscode-langservers-extracted stylua
 
