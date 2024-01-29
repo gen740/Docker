@@ -42,7 +42,7 @@ RUN /home/linuxbrew/.linuxbrew/bin/brew install tmux tokei direnv fd fzf gh glab
     wget git curl jq lsd pre-commit ripgrep go-task pyenv pyenv-virtualenv pyright       \
     nodenv clang-format lua-language-server typescript-language-server                   \
     vscode-langservers-extracted stylua                                                  \
-    && brew cleanup --prune all -s
+    && /home/linuxbrew/.linuxbrew/bin/brew cleanup --prune all -s
 
 ################################################################################
 RUN echo ${USER} | sudo -S chown -R ${USER}:${USER} ${USERHOME} \
