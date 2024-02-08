@@ -23,8 +23,7 @@ RUN echo ${USER} | sudo -S /bin/bash -c "$(curl -fsSL https://raw.githubusercont
 RUN echo ${USER} | sudo -S chown -R ${USER}:${USER} /home/linuxbrew/.linuxbrew \
     && echo ${USER} | sudo -S chsh -s /bin/zsh
 
-RUN /home/linuxbrew/.linuxbrew/bin/brew install llvm --HEAD
-RUN /home/linuxbrew/.linuxbrew/bin/brew install cmake ninja
+RUN /home/linuxbrew/.linuxbrew/bin/brew install llvm cmake ninja
 RUN /home/linuxbrew/.linuxbrew/bin/brew install neovim --HEAD
 
 # Configure dotfiles ###########################################################
