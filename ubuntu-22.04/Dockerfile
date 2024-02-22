@@ -59,7 +59,7 @@ RUN cd ${USERHOME}                                                              
     && echo ${USER} | sudo -S rm -rf ${USERHOME}/neovim
 
 # Install pyenv and setup python ###############################################
-RUN curl -sSf https://rye-up.com/get | bash                                                           \
+RUN curl -sSf https://rye-up.com/get | RYE_INSTALL_OPTION="--yes" bash                                \
     curl -LsSf https://astral.sh/uv/install.sh | sh                                                   \
     # Install nodenv and setup node
     && git clone https://github.com/nodenv/nodenv.git ${NODENV_ROOT} --depth 1                        \
