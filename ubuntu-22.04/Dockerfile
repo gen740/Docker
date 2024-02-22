@@ -4,7 +4,6 @@ LABEL version="ubuntu"
 ENV USER gen740
 ENV USERHOME /home/${USER}
 ENV XDG_CONFIG_HOME ${USERHOME}/.config
-ENV PYENV_ROOT ${XDG_CONFIG_HOME}/pyenv
 ENV NODENV_ROOT ${XDG_CONFIG_HOME}/nodenv
 ENV TZ=Asia/Tokyo
 
@@ -60,21 +59,14 @@ RUN cd ${USERHOME}                                                              
     && echo ${USER} | sudo -S rm -rf ${USERHOME}/neovim
 
 # Install pyenv and setup python ###############################################
-RUN git clone https://github.com/pyenv/pyenv.git ${PYENV_ROOT} --depth 1                                                   \
-    && cd ${PYENV_ROOT}                                                                                                    \
-    && src/configure                                                                                                       \
-    && make -C src                                                                                                         \
-    && git clone https://github.com/pyenv/pyenv-virtualenv.git ${XDG_CONFIG_HOME}/pyenv/plugins/pyenv-virtualenv --depth 1 \
-    && git clone https://github.com/pyenv/pyenv-update.git  ${XDG_CONFIG_HOME}/pyenv/plugins/pyenv-update --depth 1        \
-    && ${PYENV_ROOT}/bin/pyenv install 3.12.1                                                                              \
-    && ${PYENV_ROOT}/bin/pyenv virtualenv 3.12.1 main                                                                      \
-    && ${PYENV_ROOT}/bin/pyenv global main                                                                                 \
-    # Install nodenv and setup node 
-    && git clone https://github.com/nodenv/nodenv.git ${NODENV_ROOT} --depth 1                                             \
-    && git clone https://github.com/nodenv/node-build.git ${NODENV_ROOT}/plugins/node-build --depth 1                      \
-    && cd ${NODENV_ROOT}                                                                                                   \
-    && src/configure                                                                                                       \
-    && make -C src                                                                                                         \
+RUN curl -sSf https://rye-up.com/get | bash                                                           \
+    curl -LsSf https://astral.sh/uv/install.sh | sh                                                   \
+    # Install nodenv and setup node
+    && git clone https://github.com/nodenv/nodenv.git ${NODENV_ROOT} --depth 1                        \
+    && git clone https://github.com/nodenv/node-build.git ${NODENV_ROOT}/plugins/node-build --depth 1 \
+    && cd ${NODENV_ROOT}                                                                              \
+    && src/configure                                                                                  \
+    && make -C src                                                                                    \
     && ${NODENV_ROOT}/bin/nodenv install 20.9.0 && ${NODENV_ROOT}/bin/nodenv global 20.9.0
 
 # Configure dotfiles ###########################################################

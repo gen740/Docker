@@ -18,12 +18,6 @@ rm llvm.sh
 # https://github.com/neovim/neovim/blob/master/BUILD.md#ubuntu--debian
 apt-get -y install ninja-build gettext cmake unzip curl
 
-# Pyenv dependencies
-# https://github.com/pyenv/pyenv/wiki
-apt-get -y install build-essential libssl-dev zlib1g-dev \
-  libbz2-dev libreadline-dev libsqlite3-dev curl \
-  libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
-
 # Tools
 apt-get -y install wget git zsh tmux fd-find ripgrep aptitude
 ln -sf /bin/fdfind /usr/local/bin/fd
