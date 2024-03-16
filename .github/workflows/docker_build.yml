@@ -27,6 +27,25 @@ jobs:
         echo "${DOCKER_HUB_TOKEN}" | docker login -u gen740 --password-stdin
         docker push gen740/ubuntu-22.04:latest
 
+  build-arm:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build the Docker image
+      run: |
+        cd ubuntu-22.04
+        docker buildx build --platform linux/arm64 . -t gen740/ubuntu-22.04:latest
+      env:
+        DOCKER_BUILDKIT: 1
+
+    - name: Push to docker hub
+      env:
+        DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
+      run: |
+        echo "${DOCKER_HUB_TOKEN}" | docker login -u gen740 --password-stdin
+        docker push gen740/ubuntu-22.04:latest
+
   build_linuxbrew:
     runs-on: ubuntu-latest
     steps:
