@@ -7,6 +7,8 @@ ENV XDG_CONFIG_HOME ${USERHOME}/.config
 ENV NODENV_ROOT ${XDG_CONFIG_HOME}/nodenv
 ENV TZ=Asia/Tokyo
 
+ARG ARCH
+
 RUN useradd -m --groups sudo ${USER}                                            \
     && gpasswd -a ${USER} sudo                                                  \
     && echo "${USER}:${USER}" | chpasswd                                        \
@@ -38,11 +40,11 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     && ${USERHOME}/.cargo/bin/rustup toolchain remove stable
 
 # Install go ###################################################################
-RUN cd ${USERHOME}                                                                  \
-    && wget -q https://go.dev/dl/go1.21.6.linux-amd64.tar.gz                        \
-    && echo ${USER} | sudo -S tar -C /usr/local -xzf ./go1.21.6.linux-amd64.tar.gz  \
-    && rm ./go1.21.6.linux-amd64.tar.gz                                             \
-    && git clone --depth 1 https://github.com/junegunn/fzf.git ${USERHOME}/.fzf     \
+RUN cd ${USERHOME}                                                                   \
+    && wget -q https://go.dev/dl/go1.21.6.linux-${ARCH}.tar.gz                       \
+    && echo ${USER} | sudo -S tar -C /usr/local -xzf ./go1.21.6.linux-${ARCH}.tar.gz \
+    && rm ./go1.21.6.linux-${ARCH}.tar.gz                                            \
+    && git clone --depth 1 https://github.com/junegunn/fzf.git ${USERHOME}/.fzf      \
     && yes | ${USERHOME}/.fzf/install
 
 # Install gh ###################################################################

@@ -16,7 +16,7 @@ jobs:
     - name: Build the Docker image
       run: |
         cd ubuntu-22.04
-        docker build . -t gen740/ubuntu-22.04:latest
+        docker buildx build --build-arg ARCH=arm64 . -t gen740/ubuntu-22.04:latest
       env:
         DOCKER_BUILDKIT: 1
 
@@ -35,7 +35,7 @@ jobs:
     - name: Build the Docker image
       run: |
         cd ubuntu-22.04
-        docker buildx build --platform linux/arm64 . -t gen740/ubuntu-22.04:latest
+        docker buildx build --platform linux/arm64 --build-arg ARCH=arm64 . -t gen740/ubuntu-22.04:latest
       env:
         DOCKER_BUILDKIT: 1
 
