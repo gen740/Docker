@@ -37,7 +37,7 @@ RUN cd ${USERHOME}                                                              
 # Install Cargo and Rust tools #################################################
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     && ${USERHOME}/.cargo/bin/rustup update                                 \
-    && ${USERHOME}/.cargo/bin/cargo install lsd                             \
+    && ${USERHOME}/.cargo/bin/cargo install lsd tree-sitter-cli             \
     && rm -rf ${USERHOME}/.cargo/registry                                   \
     && ${USERHOME}/.cargo/bin/rustup toolchain remove stable
 
