@@ -15,8 +15,8 @@ chmod +x llvm.sh
 rm llvm.sh
 
 # Neovim dependencies
-# https://github.com/neovim/neovim/blob/master/BUILD.md#ubuntu--debian
-apt-get -y install ninja-build gettext cmake unzip curl
+# https://github.com/neovim/neovim/blob/master/BUILD.md#ubuntu--debian without ninja-build
+apt-get -y install gettext cmake unzip curl
 
 # Tools
 apt-get -y install wget git zsh tmux fd-find ripgrep aptitude

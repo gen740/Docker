@@ -7,8 +7,6 @@ ENV XDG_CONFIG_HOME ${USERHOME}/.config
 ENV NODENV_ROOT ${XDG_CONFIG_HOME}/nodenv
 ENV TZ=Asia/Tokyo
 
-ARG ARCH
-
 RUN useradd -m --groups sudo ${USER}                                            \
     && gpasswd -a ${USER} sudo                                                  \
     && echo "${USER}:${USER}" | chpasswd                                        \
@@ -21,16 +19,20 @@ RUN ${USERHOME}/install.sh && rm ${USERHOME}/install.sh
 USER ${USER}
 
 # Install Cmake/Ninja ################################################################
-RUN cd ${USERHOME}                                                                                                         \
-    && wget -q -O cmake_install.sh https://github.com/Kitware/CMake/releases/download/v3.28.1/cmake-3.28.1-linux-x86_64.sh \
-    && chmod +x cmake_install.sh                                                                                           \
-    && echo ${USER} | sudo -S ./cmake_install.sh --prefix=/usr/local --skip-license                                        \
-    && rm cmake_install.sh                                                                                                 \
+RUN cd ${USERHOME}                                                                                                              \
+    && wget -q -O cmake_install.sh https://github.com/Kitware/CMake/releases/download/v3.28.3/cmake-3.28.3-linux-$(uname -m).sh \
+    && chmod +x cmake_install.sh                                                        \
+    && echo ${USER} | sudo -S ./cmake_install.sh --prefix=/usr/local --skip-license     \
+    && rm cmake_install.sh                                                              \
     # Ninja
-    && cd ${USERHOME}                                                                                                      \
-    && wget -q https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-linux.zip                              \
-    && echo ${USER} | sudo -S unzip ninja-linux.zip -d /usr/local/bin                                                      \
-    && rm ninja-linux.zip
+    && cd ${USERHOME}                                                                   \
+    && wget -q https://github.com/ninja-build/ninja/archive/refs/tags/v1.11.1.zip       \
+    && unzip v1.11.1.zip                                                                \
+    && cd ninja-1.11.1                                                                  \
+    && env "CC=/usr/bin/clang-18" "CXX=/usr/bin/clang++-18" cmake -B build -S .         \
+    && cmake --build build -j 8                                                         \
+    && echo ${USER} | sudo -S cmake --install build --prefix /usr/local                 \
+    && cd .. && rm -rf ninja-1.11.1 v1.11.1.zip
 
 # Install Cargo and Rust tools #################################################
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
@@ -40,11 +42,11 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     && ${USERHOME}/.cargo/bin/rustup toolchain remove stable
 
 # Install go ###################################################################
-RUN cd ${USERHOME}                                                                   \
-    && wget -q https://go.dev/dl/go1.21.6.linux-${ARCH}.tar.gz                       \
-    && echo ${USER} | sudo -S tar -C /usr/local -xzf ./go1.21.6.linux-${ARCH}.tar.gz \
-    && rm ./go1.21.6.linux-${ARCH}.tar.gz                                            \
-    && git clone --depth 1 https://github.com/junegunn/fzf.git ${USERHOME}/.fzf      \
+RUN cd ${USERHOME}                                                                                                                         \
+    && wget -q -O go_install.tar.gz https://go.dev/dl/go1.21.6.linux-$([ $(uname -m) = "aarch64" ] && echo arm64 || echo amd64).tar.gz  \
+    && echo ${USER} | sudo -S tar -C /usr/local -xzf ./go_install.tar.gz                                                                   \
+    && rm ./go_install.tar.gz                                                                                                              \
+    && git clone --depth 1 https://github.com/junegunn/fzf.git ${USERHOME}/.fzf                                                            \
     && yes | ${USERHOME}/.fzf/install
 
 # Install gh ###################################################################
