@@ -43,7 +43,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
 
 # Install go ###################################################################
 RUN cd ${USERHOME}                                                                                                                         \
-    && wget -q -O go_install.tar.gz https://go.dev/dl/go1.21.6.linux-$([ $(uname -m) = "aarch64" ] && echo arm64 || echo amd64).tar.gz  \
+    && wget -q -O go_install.tar.gz https://go.dev/dl/go1.22.1.linux-$([ $(uname -m) = "aarch64" ] && echo arm64 || echo amd64).tar.gz  \
     && echo ${USER} | sudo -S tar -C /usr/local -xzf ./go_install.tar.gz                                                                   \
     && rm ./go_install.tar.gz                                                                                                              \
     && git clone --depth 1 https://github.com/junegunn/fzf.git ${USERHOME}/.fzf                                                            \
