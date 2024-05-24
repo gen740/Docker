@@ -65,7 +65,9 @@ RUN cd ${USERHOME}                                                              
 
 # Install pyenv and setup python ###############################################
 RUN cd ${USERHOME} \
-    curl https://get.volta.sh | bash                                         
+    curl https://get.volta.sh | bash
+
+RUN echo ${USER} | sudo -S curl -sS https://starship.rs/install.sh | sh -s -- --yes
     # $HOME/.volta/bin/volta install node && $HOME/.volta/bin/volta install npm
 
 # Configure dotfiles ###########################################################
