@@ -14,6 +14,9 @@ chmod +x llvm.sh
 ./llvm.sh 19 all
 rm llvm.sh
 
+# Install starship
+curl -sS https://starship.rs/install.sh | sh
+
 # Neovim dependencies
 # https://github.com/neovim/neovim/blob/master/BUILD.md#ubuntu--debian without ninja-build
 apt-get -y install gettext cmake unzip curl
