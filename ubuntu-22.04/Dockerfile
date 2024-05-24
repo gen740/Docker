@@ -29,7 +29,7 @@ RUN cd ${USERHOME}                                                              
     && wget -q https://github.com/ninja-build/ninja/archive/refs/tags/v1.11.1.zip       \
     && unzip v1.11.1.zip                                                                \
     && cd ninja-1.11.1                                                                  \
-    && env "CC=/usr/bin/clang-18" "CXX=/usr/bin/clang++-18" cmake -B build -S .         \
+    && env "CC=/usr/bin/clang-19" "CXX=/usr/bin/clang++-19" cmake -B build -S .         \
     && cmake --build build -j 8                                                         \
     && echo ${USER} | sudo -S cmake --install build --prefix /usr/local                 \
     && cd .. && rm -rf ninja-1.11.1 v1.11.1.zip
@@ -78,10 +78,7 @@ RUN git clone https://github.com/gen740/config.nvim.git ${XDG_CONFIG_HOME}/nvim 
     && nvim -c 'quit'                                                                     \
     && git clone https://github.com/gen740/dotfiles.git ${USERHOME}/.dotfiles --depth 1   \
     && ${USERHOME}/.dotfiles/setup.zsh                                                    \
-    && echo 'export TERM=wezterm' >> ${USERHOME}/.zshrc_local                             \
-    && cd ${USERHOME}/.dotfiles/zsh_tools                                                 \
-    && env "CC=/usr/bin/clang-18" "CXX=/usr/bin/clang++-18" cmake -B build -S . -GNinja   \
-    && echo ${USER} | sudo -S cmake --build build --target install
+    && echo 'export TERM=wezterm' >> ${USERHOME}/.zshrc_local
 
 ################################################################################
 RUN echo ${USER} | sudo -S chown -R ${USER}:${USER} ${USERHOME} \

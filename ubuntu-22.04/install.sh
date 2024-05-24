@@ -11,7 +11,7 @@ apt-get -y install tzdata locales
 apt-get -y install lsb-release wget software-properties-common gnupg
 wget -q https://apt.llvm.org/llvm.sh
 chmod +x llvm.sh
-./llvm.sh 18 all
+./llvm.sh 19 all
 rm llvm.sh
 
 # Neovim dependencies
