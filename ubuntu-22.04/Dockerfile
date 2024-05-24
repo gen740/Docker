@@ -63,12 +63,13 @@ RUN cd ${USERHOME}                                                              
     && echo ${USER} | sudo -S make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/usr/local install \
     && echo ${USER} | sudo -S rm -rf ${USERHOME}/neovim
 
-# Install pyenv and setup python ###############################################
-RUN cd ${USERHOME} \
-    curl https://get.volta.sh | bash
+# Install hatch ###############################################################
+RUN pip3 install --user hatch
 
-RUN echo ${USER} | sudo -S curl -sS https://starship.rs/install.sh | sh -s -- --yes
-    # $HOME/.volta/bin/volta install node && $HOME/.volta/bin/volta install npm
+# RUN cd ${USERHOME} curl https://get.volta.sh | bash
+#
+RUN $HOME/.cargo/bin/cargo install starship
+#     # $HOME/.volta/bin/volta install node && $HOME/.volta/bin/volta install npm
 
 # Configure dotfiles ###########################################################
 RUN git clone https://github.com/gen740/config.nvim.git ${XDG_CONFIG_HOME}/nvim --depth 1 \

@@ -22,6 +22,8 @@ apt-get -y install gettext cmake unzip curl
 apt-get -y install wget git zsh tmux fd-find ripgrep aptitude
 ln -sf /bin/fdfind /usr/local/bin/fd
 apt-get -y install direnv
+apt-get -y install python3 python3-pip
+apt-get -y install nodejs
 
 ## locale configuration
 ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone
