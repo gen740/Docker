@@ -26,13 +26,13 @@ RUN cd ${USERHOME}                                                              
     && rm cmake_install.sh                                                              \
     # Ninja
     && cd ${USERHOME}                                                                   \
-    && wget -q https://github.com/ninja-build/ninja/archive/refs/tags/v1.11.1.zip       \
-    && unzip v1.11.1.zip                                                                \
-    && cd ninja-1.11.1                                                                  \
+    && wget -q https://github.com/ninja-build/ninja/archive/refs/tags/v1.12.1.zip       \
+    && unzip v1.12.1.zip                                                                \
+    && cd ninja-1.12.1                                                                  \
     && env "CC=/usr/bin/clang-19" "CXX=/usr/bin/clang++-19" cmake -B build -S .         \
     && cmake --build build -j 8                                                         \
     && echo ${USER} | sudo -S cmake --install build --prefix /usr/local                 \
-    && cd .. && rm -rf ninja-1.11.1 v1.11.1.zip
+    && cd .. && rm -rf ninja-1.12.1 v1.12.1.zip
 
 # Install Cargo and Rust tools #################################################
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
@@ -43,7 +43,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
 
 # Install go ###################################################################
 RUN cd ${USERHOME}                                                                                                                         \
-    && wget -q -O go_install.tar.gz https://go.dev/dl/go1.22.1.linux-$([ $(uname -m) = "aarch64" ] && echo arm64 || echo amd64).tar.gz  \
+    && wget -q -O go_install.tar.gz https://go.dev/dl/go1.22.3.linux-$([ $(uname -m) = "aarch64" ] && echo arm64 || echo amd64).tar.gz  \
     && echo ${USER} | sudo -S tar -C /usr/local -xzf ./go_install.tar.gz                                                                   \
     && rm ./go_install.tar.gz                                                                                                              \
     && git clone --depth 1 https://github.com/junegunn/fzf.git ${USERHOME}/.fzf                                                            \
@@ -59,19 +59,14 @@ RUN cd ${USERHOME}                                                              
     # Install neovim
     && git clone https://github.com/neovim/neovim.git ${USERHOME}/neovim                            \
     && cd ${USERHOME}/neovim                                                                        \
+    && git checkout stable                                                                          \
     && echo ${USER} | sudo -S make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/usr/local install \
     && echo ${USER} | sudo -S rm -rf ${USERHOME}/neovim
 
 # Install pyenv and setup python ###############################################
-RUN curl -sSf https://rye-up.com/get | RYE_INSTALL_OPTION="--yes" bash                                \
-    && curl -LsSf https://astral.sh/uv/install.sh | sh                                                \
-    # Install nodenv and setup node
-    && git clone https://github.com/nodenv/nodenv.git ${NODENV_ROOT} --depth 1                        \
-    && git clone https://github.com/nodenv/node-build.git ${NODENV_ROOT}/plugins/node-build --depth 1 \
-    && cd ${NODENV_ROOT}                                                                              \
-    && src/configure                                                                                  \
-    && make -C src                                                                                    \
-    && ${NODENV_ROOT}/bin/nodenv install 20.9.0 && ${NODENV_ROOT}/bin/nodenv global 20.9.0
+RUN cd ${USERHOME} \
+    curl https://get.volta.sh | bash                                         
+    # $HOME/.volta/bin/volta install node && $HOME/.volta/bin/volta install npm
 
 # Configure dotfiles ###########################################################
 RUN git clone https://github.com/gen740/config.nvim.git ${XDG_CONFIG_HOME}/nvim --depth 1 \
