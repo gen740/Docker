@@ -65,11 +65,10 @@ RUN cd ${USERHOME}                                                              
 
 # Install hatch ###############################################################
 RUN pip3 install --user hatch
-
-# RUN cd ${USERHOME} curl https://get.volta.sh | bash
-#
 RUN $HOME/.cargo/bin/cargo install starship
-#     # $HOME/.volta/bin/volta install node && $HOME/.volta/bin/volta install npm
+
+RUN echo ${USER} | sudo -S npm install -g n
+RUN echo ${USER} | sudo -S n i lts
 
 # Configure dotfiles ###########################################################
 RUN git clone https://github.com/gen740/config.nvim.git ${XDG_CONFIG_HOME}/nvim --depth 1 \
