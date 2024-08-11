@@ -1,10 +1,10 @@
 FROM ubuntu:22.04
 LABEL version="ubuntu"
 
-ENV USER gen740
-ENV USERHOME /home/${USER}
-ENV XDG_CONFIG_HOME ${USERHOME}/.config
-ENV NODENV_ROOT ${XDG_CONFIG_HOME}/nodenv
+ENV USER=gen740
+ENV USERHOME=/home/${USER}
+ENV XDG_CONFIG_HOME=${USERHOME}/.config
+ENV NODENV_ROOT=${XDG_CONFIG_HOME}/nodenv
 ENV TZ=Asia/Tokyo
 
 RUN useradd -m --groups sudo ${USER}                                            \

@@ -13,7 +13,7 @@ RUN git clone https://github.com/gen740/config.nvim /root/.config/nvim
 
 COPY ./home.nix /root/.config/home-manager/home.nix
 
-RUN  echo "experimental-features = nix-command flakes" >> /etc/nix/nix.conf
+RUN echo "experimental-features = nix-command flakes" >> /etc/nix/nix.conf
 RUN nix-env --uninstall git
 RUN home-manager switch
 RUN nvim -c 'quit'
