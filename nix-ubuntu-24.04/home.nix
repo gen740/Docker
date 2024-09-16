@@ -1,5 +1,5 @@
 { config, pkgs, ... }:
-import ../../.dotfiles/nix-darwin/home.nix {
+import /root/.dotfiles/nix-darwin/home.nix {
   config = config;
   pkgs = pkgs;
   name = "root";

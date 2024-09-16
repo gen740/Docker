@@ -13,6 +13,7 @@
       {
         devShells.default = pkgs.mkShellNoCC {
           packages = [
+            pkgs.docker
             pkgs.docker-ls
             pkgs.dockerfile-language-server-nodejs
           ];

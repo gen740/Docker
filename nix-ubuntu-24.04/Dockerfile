@@ -15,8 +15,8 @@ RUN nix-shell '<home-manager>' -A install
 
 RUN git clone --depth=1 https://github.com/gen740/dotfiles.git /root/.dotfiles
 RUN git clone --depth=1 https://github.com/gen740/config.nvim.git /root/.config/nvim
-COPY ./home.nix /root/.config/home-manager/home.nix
 
+COPY ./home.nix /root/.config/home-manager/home.nix
 RUN home-manager switch
 RUN nix-shell -p stdenv --run "nvim -c 'TSInstallSync all | quit'"
 RUN nix-collect-garbage -d
