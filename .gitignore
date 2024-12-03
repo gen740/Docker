@@ -10,6 +10,7 @@ cmake_build
 build*
 .build
 .cache
+.direnv
 
 # python
 typings
@@ -22,4 +23,3 @@ node_modules
 
 # Rust
 target
-
